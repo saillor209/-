@@ -51,8 +51,11 @@ file_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="File", menu=file_menu)
 file_menu.add_command(label="Quit", command=root.quit)
 
-## ffmpeg 테스트!!!!!!!!!!!!!
-file_menu.add_command(label="ffmpegTest", command=ffmpeg.split)
+## ffmpeg.split 테스트!!!!!!!!!!!!!
+file_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)
+
+## ffmpeg.get_preferences 테스트!!!!!!!!!!!!!
+file_menu.add_command(label="ffmpeg.get_preferences", command=ffmpeg.get_preferences)
 
     ## Edit 메뉴 ##
 # Edit - Preference 실행

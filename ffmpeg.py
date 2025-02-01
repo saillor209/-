@@ -18,12 +18,19 @@ def get_preferences():
     else:
         calc = None
     # 코덱 세팅
+    if preferences.ffmpeg_hwaccel == True and preferences.ffmpeg_codec == "265":
+        codec = "evc"
+    else: codec = "264"
+
     if preferences.ffmpeg_hwaccel_method == "soft":
         codec = f"libx{preferences.ffmpeg_codec}"
     elif preferences.ffmpeg_hwaccel_method == "cuda":
-        codec = f"h{preferences.ffmpeg_codec}_nvenc"
+        codec = f"h{codec}_nvenc"
     elif preferences.ffmpeg_hwaccel_method == "qsv":
-        codec = f"h{preferences.ffmpeg_codec}_qsv"
+        codec = f"h{codec}_qsv"
+        
+    print("[Current Settings]")
+    print(f"   Input Path: {input}\n   Output Path: {output}\n   Calc: {calc}\n   Codec: {codec}")
 
     return input, output, calc, codec
 
