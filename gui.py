@@ -22,10 +22,10 @@ y_position = (screen_height - window_height) // 2
 
 root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")  # 창의 위치 설정
 root.iconbitmap(ico)  # 아이콘 지정
-root.title("Tkinter 예제")  # 창 제목 설정
+root.title("Upscaler")  # 창 제목 설정
 
 # 텍스트
-label = Label(root, text="Hello, Tkinter!")  # 텍스트 라벨 생성
+label = Label(root, text="Hi")  # 텍스트 라벨 생성
 label.pack()  # 화면에 배치
 
 # 새 창 정중앙에 오는 위치 계산해주는 함수수
