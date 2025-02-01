@@ -47,18 +47,40 @@ def split():
         # 출력 폴더가 없으면 생성
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
+
+            # FFmpeg 명령어로 비디오의 FPS 정보 얻기
+        command_fps = [
+        ffmpeg_path,
+        "-i", video,
+        "-hide_banner"
+        ]
+    
+        # FPS 추출을 위해 FFmpeg 명령어 실행
+        fps_output = subprocess.run(command_fps, capture_output=True, text=True)
+    
+        # FPS 값 파싱 (정규 표현식으로 FFmpeg의 출력에서 FPS 값 추출)
+        fps = None
+        for line in fps_output.stderr.split('\n'):
+            if 'fps' in line:
+                # FPS 값을 찾은 경우, 값을 파싱하여 추출
+                fps = float(line.split('fps')[0].strip().split()[-1])
+            break
+
+    if fps is None:
+        print(f"[FFmpeg] Info: FPS not found for {video}. Using default fps=30.")
+        fps = 30  # FPS 정보를 찾을 수 없으면 기본값을 30으로 설정
     
         # FFmpeg 명령어로 비디오의 프레임을 이미지 파일로 저장
-        command =[
+        command_split =[
             ffmpeg_path,
             "-i", video,  # 입력 비디오 파일
-            "-vf", "fps=1",  # 초당 1프레임 추출
+            "-vf", f"fps={fps}",  # Frames Per Second
             os.path.join(output_folder, '%06d.jpg')  # 저장할 이미지 형식 (6자리 숫자 이미지 파일)
             ]
         if calc_method != None:  # calc_method가 None이 아닐 때만 추가
-            command.insert(1, "-hwaccel")
-            command.insert(2, calc_method)
-            command.insert(8, "-c:v")
-            command.insert(9, codec)
+            command_split.insert(1, "-hwaccel")
+            command_split.insert(2, calc_method)
         
-        subprocess.run(command)  # FFmpeg 명령어 실행
+        print("[FFmpeg] Splitting the video based on the frame rate:", " ".join(command_split))
+
+        subprocess.run(command_split)  # FFmpeg_split 명령어 실행
