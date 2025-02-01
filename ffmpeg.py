@@ -2,7 +2,7 @@ import os
 import subprocess
 import glob
 import preferences
-import math
+# import math
 
 # ffmpeg 경로 받기
 ffmpeg_path = "./assets/ffmpeg/bin/ffmpeg.exe"
