@@ -2,9 +2,11 @@ import os
 import subprocess
 import glob
 import preferences
+import math
 
 # ffmpeg 경로 받기
 ffmpeg_path = "./assets/ffmpeg/bin/ffmpeg.exe"
+ffprobe_path = "./assets/ffmpeg/bin/ffprobe.exe"
 
 # preferences에서 저장된 설정 받아오기
 def get_preferences():
@@ -28,7 +30,7 @@ def get_preferences():
 ### 비디오의 프레임 나누기 ###
 def split():
     # get_preferences
-    input_path, output_path, calc_method, codec = get_preferences()
+    input_path, output_path, calc_method, _ = get_preferences()
 
     # glob을 사용하여 다양한 확장자의 비디오 파일을 찾음
     video_files = glob.glob(os.path.join(input_path, '*.mp4')) + \
@@ -48,29 +50,31 @@ def split():
         if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
-            # FFmpeg 명령어로 비디오의 FPS 정보 얻기
-        command_fps = [
-        ffmpeg_path,
-        "-i", video,
-        "-hide_banner"
-        ]
-    
-        # FPS 추출을 위해 FFmpeg 명령어 실행
-        fps_output = subprocess.run(command_fps, capture_output=True, text=True)
-    
-        # FPS 값 파싱 (정규 표현식으로 FFmpeg의 출력에서 FPS 값 추출)
-        fps = None
-        for line in fps_output.stderr.split('\n'):
-            if 'fps' in line:
-                # FPS 값을 찾은 경우, 값을 파싱하여 추출
-                fps = float(line.split('fps')[0].strip().split()[-1])
-            break
 
-    if fps is None:
-        print(f"[FFmpeg] Info: FPS not found for {video}. Using default fps=30.")
-        fps = 30  # FPS 정보를 찾을 수 없으면 기본값을 30으로 설정
+        ## FPS값 추출 ##
+        command_find_fps = [
+            ffprobe_path, 
+            '-v', 'error', 
+            '-select_streams', 'v:0', 
+            '-show_entries', 'stream=r_frame_rate', 
+            '-of', 'default=noprint_wrappers=1', video
+        ]
+
+        print("[FFmpeg]", " ".join(command_find_fps))
+        result = subprocess.run(command_find_fps, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
-        # FFmpeg 명령어로 비디오의 프레임을 이미지 파일로 저장
+        # r_frame_rate 값 추출 (형식: r_frame_rate=numerator/denominator)
+        r_frame_rate = result.stdout.strip().split('=')[1]  # 例: 'r_frame_rate=30000/1001'에서 '30000/1001'만 추출
+    
+        # 분자와 분모로 나누어 FPS 계산
+        numerator, denominator = map(int, r_frame_rate.split('/'))
+        # fps = math.ceil(numerator / denominator)  # 분자, 분모 나눈 후 소수점 올림 (math.ceil = 올림, math.floor = 내림)
+        ## ㄴ 이거 굳이 정수로 안해도 프레임 잘 뽑아내던데 굳이 해야하나????
+        fps = numerator / denominator
+        print(f"[FFmpeg] FPS of the video = {fps}")
+
+
+        ## 비디오의 프레임을 이미지 파일로 저장 ##
         command_split =[
             ffmpeg_path,
             "-i", video,  # 입력 비디오 파일
@@ -81,6 +85,7 @@ def split():
             command_split.insert(1, "-hwaccel")
             command_split.insert(2, calc_method)
         
-        print("[FFmpeg] Splitting the video based on the frame rate:", " ".join(command_split))
-
-        subprocess.run(command_split)  # FFmpeg_split 명령어 실행
+        # FFmpeg_split 명령어 실행
+        print("[FFmpeg] Splitting the video based on the frame rate.")
+        print("[FFmpeg]", " ".join(command_split))
+        subprocess.run(command_split)
