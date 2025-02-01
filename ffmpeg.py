@@ -6,18 +6,29 @@ import preferences
 # ffmpeg 경로 받기
 ffmpeg_path = "./assets/ffmpeg/bin/ffmpeg.exe"
 
-# preferences에서 지정된 설정 받아오기
+# preferences에서 저장된 설정 받아오기
 def get_preferences():
     input = preferences.video_input_path
     output = preferences.video_output_path
+    # 하드웨어 가속 세팅
+    if preferences.ffmpeg_hwaccel == True:  
+        calc = preferences.ffmpeg_hwaccel_method
+    else:
+        calc = None
+    # 코덱 세팅
+    if preferences.ffmpeg_hwaccel_method == "soft":
+        codec = f"libx{preferences.ffmpeg_codec}"
+    elif preferences.ffmpeg_hwaccel_method == "cuda":
+        codec = f"h{preferences.ffmpeg_codec}_nvenc"
+    elif preferences.ffmpeg_hwaccel_method == "qsv":
+        codec = f"h{preferences.ffmpeg_codec}_qsv"
+
+    return input, output, calc, codec
 
 ### 비디오의 프레임 나누기 ###
 def split():
-    # 인코더, 디코더 지정
-
-    # preferences.py에서 input, output 받기
-    input_path = preferences.video_input_path
-    output_path = preferences.video_output_path
+    # get_preferences
+    input_path, output_path, calc_method, codec = get_preferences()
 
     # glob을 사용하여 다양한 확장자의 비디오 파일을 찾음
     video_files = glob.glob(os.path.join(input_path, '*.mp4')) + \
@@ -40,9 +51,14 @@ def split():
         # FFmpeg 명령어로 비디오의 프레임을 이미지 파일로 저장
         command =[
             ffmpeg_path,
-            '-i', video,  # 입력 비디오 파일
-            '-vf', 'fps=1',  # 초당 1프레임 추출
+            "-i", video,  # 입력 비디오 파일
+            "-vf", "fps=1",  # 초당 1프레임 추출
             os.path.join(output_folder, '%06d.jpg')  # 저장할 이미지 형식 (6자리 숫자 이미지 파일)
             ]
+        if calc_method != None:  # calc_method가 None이 아닐 때만 추가
+            command.insert(1, "-hwaccel")
+            command.insert(2, calc_method)
+            command.insert(8, "-c:v")
+            command.insert(9, codec)
         
         subprocess.run(command)  # FFmpeg 명령어 실행
