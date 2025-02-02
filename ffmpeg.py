@@ -51,7 +51,7 @@ def split():
         video_name = os.path.basename(video)
     
         # 출력 폴더 경로 지정 (output_path 안에 비디오 이름으로 폴더 생성)
-        output_folder = os.path.join(f"{output_path}/.temp", f"ffmpeg_split_{video_name}")
+        output_folder = os.path.join("./.Temp", f"ffmpeg_split_{video_name}")
     
         # 출력 폴더가 없으면 생성
         if not os.path.exists(output_folder):
