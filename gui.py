@@ -32,24 +32,24 @@ def add_log(message="hi"):
     timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
     log_message = f"{timestamp} {message}"
     
-    log_text.config(state='normal')  # 편집 가능하게 설정
+    log_text.config(state="normal")  # 편집 가능하게 설정
     log_text.insert(END, "\n" + log_message)  # 로그 추가
-    log_text.config(state='disabled')  # 다시 읽기 전용으로 설정
+    log_text.config(state="disabled")  # 다시 읽기 전용으로 설정
     if preferences.log_auto_scroll: log_text.yview(END)  # yviw(END) = 스크롤을 가장 아래로 이동
     
 def clear_log():
-    log_text.config(state='normal')
+    log_text.config(state="normal")
     log_text.delete("1.0", END)  # 첫 번째 문자(1.0)부터 끝(END)까지 삭제
     log_text.insert(END, f"{datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")}\n[Program] The log has been cleared.")
-    log_text.config(state='disabled')
+    log_text.config(state="disabled")
 
-# 로그 출력 창 (ScrolledText)
-"""ScrolledText(부모위젯, 문자가로, 문자세로, 편집가능여부, 줄바꿈기준)"""
-log_text = ScrolledText(root, bg="black", fg="white", insertbackground="white", width=10, height=10, state='normal')
-"""pack(가로여백, 세로여백, 빈공간 채우는 방식, True=창에 따른 위젯 크기 조정)"""
+## 로그 출력 창 (ScrolledText)
+# bg="배경색상", fg="폰트색상", insertbackground="배경에 들어온 커서 색상", width=문자가로, height=문자세로, state="편집가능여부"
+log_text = ScrolledText(root, bg="black", fg="white", insertbackground="white", width=10, height=10, state="normal")
+# padx=가로여백, pady=세로여백, fill=빈공간 채우는 방식, expand=창에 따른 위젯 크기 조정
 log_text.pack(padx=12, pady=12, fill=BOTH, expand=True)
 log_text.insert(END, f"{datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")}\n[Program] Hi")
-log_text.config(state='disabled')
+log_text.config(state="disabled")
 if preferences.log_auto_scroll: log_text.yview(END)
 
 
@@ -79,7 +79,7 @@ def center_calc(window_width, window_height):
     
     # 중앙 좌표 계산
     x_position = root_x + (root_width - window_width) // 2
-    y_position = root_y + (root_height - window_height) // 2 + 25  # 25는 보정값
+    y_position = root_y + (root_height - window_height) // 2 + 20  # 20 = 보정값
     return window_width, window_height, x_position, y_position
 
 # 메뉴 바
