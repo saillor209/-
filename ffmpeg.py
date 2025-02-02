@@ -14,7 +14,7 @@ def get_preferences():
     output = preferences.video_output_path
     # 하드웨어 가속 세팅
     if preferences.ffmpeg_hwaccel == True:  
-        calc = preferences.ffmpeg_hwaccel_method
+        calc = preferences.ffmpeg_calc_method
     else:
         calc = None
     # 코덱 세팅
@@ -22,11 +22,11 @@ def get_preferences():
         codec = "evc"
     else: codec = "264"
 
-    if preferences.ffmpeg_hwaccel_method == "soft":
+    if preferences.ffmpeg_calc_method == "soft":
         codec = f"libx{preferences.ffmpeg_codec}"
-    elif preferences.ffmpeg_hwaccel_method == "cuda":
+    elif preferences.ffmpeg_calc_method == "cuda":
         codec = f"h{codec}_nvenc"
-    elif preferences.ffmpeg_hwaccel_method == "qsv":
+    elif preferences.ffmpeg_calc_method == "qsv":
         codec = f"h{codec}_qsv"
         
     print("[Current Settings]")
