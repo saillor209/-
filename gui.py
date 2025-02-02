@@ -1,9 +1,47 @@
 import webbrowser
 from tkinter import *
 from tkinter.scrolledtext import *
+from tkinter.filedialog import *
 from datetime import *
 import ffmpeg
 import preferences
+
+# 프로그램 종료시 실행되는 함수
+def close_program():
+    preferences.save_config()
+    print("QUit")
+    root.destroy()
+
+# 로그 출력 함수
+def add_log(message="hi"):
+    timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+    log_message = f"{timestamp} {message}"
+    
+    log_text.config(state="normal")  # 편집 가능하게 설정
+    log_text.insert(END, "\n" + log_message)  # 로그 추가
+    log_text.config(state="disabled")  # 다시 읽기 전용으로 설정
+    if preferences.log_auto_scroll: log_text.yview(END)  # yviw(END) = 스크롤을 가장 아래로 이동
+
+# Front Panel - Clear
+def clear_log():
+    log_text.config(state="normal")
+    log_text.delete("1.0", END)  # 첫 번째 문자(1.0)부터 끝(END)까지 삭제
+    log_text.insert(END, f"{datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")}\n[Program] The log has been cleared.")
+    log_text.config(state="disabled")
+
+# 새 윈도우를 중앙에 오도록 위치 계산해주는 함수
+def center_calc(window_width, window_height):
+
+    # root 창의 위치와 크기 가져오기
+    root_x = root.winfo_x()  # root 창의 X 좌표
+    root_y = root.winfo_y()  # root 창의 Y 좌표
+    root_width = root.winfo_width()  # root 창의 가로 크기
+    root_height = root.winfo_height()  # root 창의 세로 크기
+    
+    # 중앙 좌표 계산
+    x_position = root_x + (root_width - window_width) // 2
+    y_position = root_y + (root_height - window_height) // 2 + 20  # 20 = 보정값
+    return window_width, window_height, x_position, y_position
 
 # 해상도
 window_width = 640
@@ -27,22 +65,6 @@ root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")  # �
 root.iconbitmap(ico)  # 아이콘 지정
 root.title("Upscaler")  # 창 제목 설정
 
-## 로그 출력 함수
-def add_log(message="hi"):
-    timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-    log_message = f"{timestamp} {message}"
-    
-    log_text.config(state="normal")  # 편집 가능하게 설정
-    log_text.insert(END, "\n" + log_message)  # 로그 추가
-    log_text.config(state="disabled")  # 다시 읽기 전용으로 설정
-    if preferences.log_auto_scroll: log_text.yview(END)  # yviw(END) = 스크롤을 가장 아래로 이동
-    
-def clear_log():
-    log_text.config(state="normal")
-    log_text.delete("1.0", END)  # 첫 번째 문자(1.0)부터 끝(END)까지 삭제
-    log_text.insert(END, f"{datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")}\n[Program] The log has been cleared.")
-    log_text.config(state="disabled")
-
 ## 로그 출력 창 (ScrolledText)
 # bg="배경색상", fg="폰트색상", insertbackground="배경에 들어온 커서 색상", width=문자가로, height=문자세로, state="편집가능여부"
 log_text = ScrolledText(root, bg="black", fg="white", insertbackground="white", width=10, height=10, state="normal")
@@ -51,7 +73,6 @@ log_text.pack(padx=12, pady=12, fill=BOTH, expand=True)
 log_text.insert(END, f"{datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")}\n[Program] Hi")
 log_text.config(state="disabled")
 if preferences.log_auto_scroll: log_text.yview(END)
-
 
    ### Front Panel ###
 
@@ -67,20 +88,6 @@ clear_button.pack(side=RIGHT, padx=(0, 12), pady=(0, 12))
 # 오토 스크롤 체크박스(어작 기능이 업음 ㅋㅋㅋ)
 auto_scroll_checkbox = Checkbutton(root, text="Auto Scroll", variable=preferences.log_auto_scroll)
 auto_scroll_checkbox.pack(side=RIGHT, padx=(0, 12), pady=(0, 12))
-
-# 새 윈도우를 중앙에 오도록 위치 계산해주는 함수
-def center_calc(window_width, window_height):
-
-    # root 창의 위치와 크기 가져오기
-    root_x = root.winfo_x()  # root 창의 X 좌표
-    root_y = root.winfo_y()  # root 창의 Y 좌표
-    root_width = root.winfo_width()  # root 창의 가로 크기
-    root_height = root.winfo_height()  # root 창의 세로 크기
-    
-    # 중앙 좌표 계산
-    x_position = root_x + (root_width - window_width) // 2
-    y_position = root_y + (root_height - window_height) // 2 + 20  # 20 = 보정값
-    return window_width, window_height, x_position, y_position
 
 # 메뉴 바
 menu_bar = Menu(root)  # 메뉴 바 생성
@@ -104,13 +111,31 @@ file_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="File", menu=file_menu)
 file_menu.add_command(label="Preferences", command=file_preference)
 file_menu.add_separator() # 구분선 생성
-file_menu.add_command(label="Quit", command=root.quit)
+file_menu.add_command(label="Quit", command=close_program)
 
     ### Edit 메뉴 ###
+
+# Select input path...
+def edit_select_input_path():
+    path = askdirectory(title="select the path of the video...")
+    preferences.video_input_path = path
+
+# Select output path...
+def edit_select_output_path():
+    path = askdirectory(title="select the path of the video...")
+    preferences.video_output_path = path
+
+def input_print():
+    print(preferences.video_input_path)
+    print(preferences.video_output_path)
 
 # Edit 메뉴 생성
 edit_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Edit", menu=edit_menu)
+edit_menu.add_command(label="Select input path...", command=edit_select_input_path)
+edit_menu.add_command(label="Select output path...", command=edit_select_output_path)
+edit_menu.add_separator()
+edit_menu.add_command(label="test", command=input_print)
 
     ### Help 메뉴 ###
 
@@ -152,4 +177,5 @@ debug_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)
 debug_menu.add_command(label="ffmpeg.get_preferences", command=ffmpeg.get_preferences)
 
 
+root.protocol("WM_DELETE_WINDOW", close_program)  # 종료 시 close_program() 실행
 root.mainloop()  # 창 유지

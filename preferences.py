@@ -1,5 +1,19 @@
 import json
 
+## 프로그램 실행시 config.json을 저장함.
+def save_config(filename="config.json"):
+    data = {
+        "log_auto_scroll": log_auto_scroll,
+        "video_input_path": video_input_path,
+        "video_output_path": video_output_path,
+        "ffmpeg_calc_method": ffmpeg_calc_method,
+        "ffmpeg_codec": ffmpeg_codec,
+        "realcugan_model": realcugan_model
+        }
+    """주어진 데이터를 JSON 파일에 저장하는 함수"""
+    with open(filename, "w") as file:
+        json.dump(data, file, indent=4)
+
 ## 최초 preferences 설정
 with open("./configs/config.json", "r", encoding="utf-8") as f:
     config = json.load(f)  # JSON 내용을 딕셔너리로 변환
