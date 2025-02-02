@@ -27,31 +27,48 @@ root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")  # �
 root.iconbitmap(ico)  # 아이콘 지정
 root.title("Upscaler")  # 창 제목 설정
 
-def add_log(message):
-    """로그를 추가하는 함수"""
+## 로그 출력 함수
+def add_log(message="hi"):
     timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
     log_message = f"{timestamp} {message}"
     
     log_text.config(state='normal')  # 편집 가능하게 설정
-    log_text.insert(END, log_message + "\n")  # 로그 추가
+    log_text.insert(END, "\n" + log_message)  # 로그 추가
     log_text.config(state='disabled')  # 다시 읽기 전용으로 설정
     if preferences.log_auto_scroll: log_text.yview(END)  # yviw(END) = 스크롤을 가장 아래로 이동
+    
+def clear_log():
+    log_text.config(state='normal')
+    log_text.delete("1.0", END)  # 첫 번째 문자(1.0)부터 끝(END)까지 삭제
+    log_text.insert(END, f"{datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")}\n[Program] The log has been cleared.")
+    log_text.config(state='disabled')
 
 # 로그 출력 창 (ScrolledText)
 """ScrolledText(부모위젯, 문자가로, 문자세로, 편집가능여부, 줄바꿈기준)"""
-log_text = ScrolledText(root, width=10, height=10, state='disabled')
+log_text = ScrolledText(root, bg="black", fg="white", insertbackground="white", width=10, height=10, state='normal')
 """pack(가로여백, 세로여백, 빈공간 채우는 방식, True=창에 따른 위젯 크기 조정)"""
-log_text.pack(padx=10, pady=5, fill=BOTH, expand=True)
+log_text.pack(padx=12, pady=12, fill=BOTH, expand=True)
+log_text.insert(END, f"{datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")}\n[Program] Hi")
+log_text.config(state='disabled')
+if preferences.log_auto_scroll: log_text.yview(END)
 
-# 테스트 로그 버튼
-log_button = Button(root, text="로그 추가", command=add_log)
-log_button.pack(pady=10)
 
-# 텍스트
-# label = Label(root, text="Hi")  # 텍스트 라벨 생성
-# label.pack()  # 화면에 배치
+   ### Front Panel ###
 
-# 새 창 정중앙에 오는 위치 계산해주는 함수
+# 로그 테스트 버튼
+log_button = Button(root, text="log_test", command=add_log)
+log_button.pack(side=LEFT, padx=(12, 0), pady=(0, 12))
+# 스탑 버튼(아직 기능이 없음 ㅋㅋ)
+stop_button = Button(root, text="Stop", command=add_log)
+stop_button.pack(side=LEFT, padx=(12, 0), pady=(0, 12))
+# Clear Log
+clear_button = Button(root, text="Claer", command=clear_log)
+clear_button.pack(side=RIGHT, padx=(0, 12), pady=(0, 12))
+# 오토 스크롤 체크박스(어작 기능이 업음 ㅋㅋㅋ)
+auto_scroll_checkbox = Checkbutton(root, text="Auto Scroll", variable=preferences.log_auto_scroll)
+auto_scroll_checkbox.pack(side=RIGHT, padx=(0, 12), pady=(0, 12))
+
+# 새 윈도우를 중앙에 오도록 위치 계산해주는 함수
 def center_calc(window_width, window_height):
 
     # root 창의 위치와 크기 가져오기

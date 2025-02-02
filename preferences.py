@@ -10,9 +10,9 @@ log_auto_scroll = config["log_auto_scroll"]
 video_input_path = config["video_input_path"]
 video_output_path = config["video_output_path"]
 ## FFmpeg 설정
-ffmpeg_calc_method = config["ffmpeg_calc_method"]  # Default = soft (hwaccel = False) / cuda (Nvidia) / qsv (Intel Quick Sync)
-if ffmpeg_calc_method == "soft": ffmpeg_hwaccel = False
-else: ffmpeg_hwaccel = True  #  False  # Default = False (연산 주체가 soft라면 하드웨어 가속은 False가 되어야 합니다.)
+ffmpeg_calc_method = config["ffmpeg_calc_method"]  # Default = cpu (hwaccel = False) / cuda (Nvidia) / qsv (Intel Quick Sync)
+if ffmpeg_calc_method == "cpu": ffmpeg_hwaccel = False
+else: ffmpeg_hwaccel = True  #  False  # Default = False (연산 주체가 cpu라면 하드웨어 가속은 False가 되어야 합니다.)
 ffmpeg_codec = config["ffmpeg_codec"]  # Default = 264 (H.264) / 265 (H.265)
 ### realcugan 설정 ###
 realcugan_model = config["realcugan_model"]  # Default = model_pro / model_se

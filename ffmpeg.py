@@ -22,7 +22,7 @@ def get_preferences():
         codec = "evc"
     else: codec = "264"
 
-    if preferences.ffmpeg_calc_method == "soft":
+    if preferences.ffmpeg_calc_method == "cpu":
         codec = f"libx{preferences.ffmpeg_codec}"
     elif preferences.ffmpeg_calc_method == "cuda":
         codec = f"h{codec}_nvenc"
