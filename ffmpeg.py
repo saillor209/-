@@ -4,7 +4,7 @@ import glob
 import preferences
 # import math
 
-# ffmpeg 경로 받기
+# ffmpeg 경로 저장
 ffmpeg_path = "./assets/ffmpeg/bin/ffmpeg.exe"
 ffprobe_path = "./assets/ffmpeg/bin/ffprobe.exe"
 

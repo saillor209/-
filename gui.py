@@ -46,20 +46,10 @@ def center_calc(window_width, window_height):
 menu_bar = Menu(root)  # 메뉴 바 생성
 root.config(menu=menu_bar)  # 메뉴 바를 창에 적용
 
-# File 메뉴 생성
-file_menu = Menu(menu_bar, tearoff=0)
-menu_bar.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="Quit", command=root.quit)
+    ### File 메뉴 ###
 
-## ffmpeg.split 테스트!!!!!!!!!!!!!
-file_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)
-
-## ffmpeg.get_preferences 테스트!!!!!!!!!!!!!
-file_menu.add_command(label="ffmpeg.get_preferences", command=ffmpeg.get_preferences)
-
-    ## Edit 메뉴 ##
-# Edit - Preference 실행
-def edit_preference():
+# File - Prefernces method
+def file_preference():
     width, height, x, y = center_calc(700, 500)
     prefer = Toplevel(root)
     prefer.resizable(False, False)
@@ -69,14 +59,22 @@ def edit_preference():
     prefer.transient(root)
     prefer.grab_set()
 
+# FIle 메뉴 생성
+file_menu = Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="Preferences", command=file_preference)
+file_menu.add_separator() # 구분선 생성
+file_menu.add_command(label="Quit", command=root.quit)
+
+    ### Edit 메뉴 ###
+
 # Edit 메뉴 생성
 edit_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Edit", menu=edit_menu)
-edit_menu.add_command(label="Preferences", command=edit_preference)
 
+    ### Help 메뉴 ###
 
-    ## Help 메뉴 ##
-# Help - Information 실행
+# Help - Information... 실행
 def help_information():
     width, height, x, y = center_calc(400, 300)
     about = Toplevel(root)
@@ -86,6 +84,7 @@ def help_information():
     about.title("Information...")
     about.transient(root)  # 메인 창과 연관되도록 설정
     about.grab_set()  # info 창이 닫히기 전까지 다른 창 클릭 방지
+
 
     about.mainloop()
 
@@ -97,9 +96,20 @@ def help_bug():
 help_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Help", menu=help_menu)
 help_menu.add_command(label="Report Bugs...", command=help_bug)
-help_menu.add_separator() # 구분선 생성
+help_menu.add_separator()
 help_menu.add_command(label="Information...", command=help_information)
 
+    ### Debug 메뉴 ###
+
+# Debug 메뉴 생성
+debug_menu = Menu(menu_bar, tearoff=0)
+menu_bar.add_cascade(label="Debug", menu=debug_menu)
+debug_menu.add_command(label="get_pr", command=ffmpeg.split)
+debug_menu.add_separator()
+# ffmpeg.split 테스트!!!!!!!!!!!!!
+debug_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)
+# ffmpeg.get_preferences 테스트!!!!!!!!!!!!!
+debug_menu.add_command(label="ffmpeg.get_preferences", command=ffmpeg.get_preferences)
 
 
 
