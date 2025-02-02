@@ -1,9 +1,5 @@
 {
-    "video_input_path": "./.Videos",
-    "video_output_path": "./.Results",
+    "video_input_path": "./Videos",
+    "video_output_path": "./Results"
 
-    "ffmpeg_hwaccel_methodh": "soft",
-    "ffmpeg_codec": "264",
-
-    "realcugan_model": "model_pro"
 }
