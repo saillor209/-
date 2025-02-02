@@ -1,10 +1,13 @@
 import webbrowser
 from tkinter import *
+from tkinter.scrolledtext import *
 import ffmpeg
+import datetime
+from preferences import *
 
 # 해상도
-window_width = 800
-window_height = 600
+window_width = 700
+window_height = 500
 
 ico = ("./assets/hk4e_global.ico")
 
@@ -24,11 +27,31 @@ root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")  # �
 root.iconbitmap(ico)  # 아이콘 지정
 root.title("Upscaler")  # 창 제목 설정
 
-# 텍스트
-label = Label(root, text="Hi")  # 텍스트 라벨 생성
-label.pack()  # 화면에 배치
+def add_log(message="디버깅 메시지 출력!"):
+    """로그를 추가하는 함수"""
+    timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+    log_message = f"{timestamp} {message}"
+    
+    log_text.config(state='normal')  # 편집 가능하게 설정
+    log_text.insert(END, log_message + "\n")  # 로그 추가
+    log_text.config(state='disabled')  # 다시 읽기 전용으로 설정
+    if log_auto_scroll: log_text.yview(END)  # yviw(END) = 스크롤을 가장 아래로 이동
 
-# 새 창 정중앙에 오는 위치 계산해주는 함수수
+# 로그 출력 창 (ScrolledText)
+"""ScrolledText(부모위젯, 문자가로, 문자세로, 편집가능여부, 줄바꿈기준)"""
+log_text = ScrolledText(root, width=150, height=5, state='disabled')
+"""pack(가로여백, 세로여백, 빈공간 채우는 방식, True=창에 따른 위젯 크기 조정)"""
+log_text.pack(padx=10, pady=5, fill=BOTH, expand=True)
+
+# 테스트 로그 버튼
+log_button = Button(root, text="로그 추가", command=add_log)
+log_button.pack(pady=10)
+
+# 텍스트
+#label = Label(root, text="Hi")  # 텍스트 라벨 생성
+#label.pack()  # 화면에 배치
+
+# 새 창 정중앙에 오는 위치 계산해주는 함수
 def center_calc(window_width, window_height):
 
     # root 창의 위치와 크기 가져오기
@@ -50,7 +73,7 @@ root.config(menu=menu_bar)  # 메뉴 바를 창에 적용
 
 # File - Prefernces method
 def file_preference():
-    width, height, x, y = center_calc(700, 500)
+    width, height, x, y = center_calc(500, 400)
     prefer = Toplevel(root)
     prefer.resizable(False, False)
     prefer.geometry(f"{width}x{height}+{x}+{y}")
@@ -104,13 +127,12 @@ help_menu.add_command(label="Information...", command=help_information)
 # Debug 메뉴 생성
 debug_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Debug", menu=debug_menu)
-debug_menu.add_command(label="get_pr", command=ffmpeg.split)
+debug_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)
 debug_menu.add_separator()
 # ffmpeg.split 테스트!!!!!!!!!!!!!
 debug_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)
 # ffmpeg.get_preferences 테스트!!!!!!!!!!!!!
 debug_menu.add_command(label="ffmpeg.get_preferences", command=ffmpeg.get_preferences)
-
 
 
 root.mainloop()  # 창 유지

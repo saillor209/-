@@ -76,7 +76,7 @@ def split():
         # 분자와 분모로 나누어 FPS 계산
         numerator, denominator = map(int, r_frame_rate.split('/'))
         # fps = math.ceil(numerator / denominator)  # 분자, 분모 나눈 후 소수점 올림 (math.ceil = 올림, math.floor = 내림)
-        ## ㄴ 이거 굳이 정수로 안해도 프레임 잘 뽑아내던데 굳이 해야하나????
+        #   ㄴ 이거 굳이 정수로 안해도 프레임 잘 뽑아내던데 굳이 해야하나????
         fps = numerator / denominator
         print(f"[FFmpeg] FPS of the video = {fps}")
 

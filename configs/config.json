@@ -1,4 +1,5 @@
 {
+    "log_auto_scroll": false,
     "video_input_path": "./.Videos",
     "video_output_path": "./.Results",
 
