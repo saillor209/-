@@ -1,13 +1,13 @@
 import webbrowser
 from tkinter import *
 from tkinter.scrolledtext import *
+from datetime import *
 import ffmpeg
-import datetime
-from preferences import *
+import preferences
 
 # 해상도
-window_width = 700
-window_height = 500
+window_width = 640
+window_height = 480
 
 ico = ("./assets/hk4e_global.ico")
 
@@ -27,19 +27,19 @@ root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")  # �
 root.iconbitmap(ico)  # 아이콘 지정
 root.title("Upscaler")  # 창 제목 설정
 
-def add_log(message="디버깅 메시지 출력!"):
+def add_log(message):
     """로그를 추가하는 함수"""
-    timestamp = datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+    timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
     log_message = f"{timestamp} {message}"
     
     log_text.config(state='normal')  # 편집 가능하게 설정
     log_text.insert(END, log_message + "\n")  # 로그 추가
     log_text.config(state='disabled')  # 다시 읽기 전용으로 설정
-    if log_auto_scroll: log_text.yview(END)  # yviw(END) = 스크롤을 가장 아래로 이동
+    if preferences.log_auto_scroll: log_text.yview(END)  # yviw(END) = 스크롤을 가장 아래로 이동
 
 # 로그 출력 창 (ScrolledText)
 """ScrolledText(부모위젯, 문자가로, 문자세로, 편집가능여부, 줄바꿈기준)"""
-log_text = ScrolledText(root, width=150, height=5, state='disabled')
+log_text = ScrolledText(root, width=10, height=10, state='disabled')
 """pack(가로여백, 세로여백, 빈공간 채우는 방식, True=창에 따른 위젯 크기 조정)"""
 log_text.pack(padx=10, pady=5, fill=BOTH, expand=True)
 
@@ -48,8 +48,8 @@ log_button = Button(root, text="로그 추가", command=add_log)
 log_button.pack(pady=10)
 
 # 텍스트
-#label = Label(root, text="Hi")  # 텍스트 라벨 생성
-#label.pack()  # 화면에 배치
+# label = Label(root, text="Hi")  # 텍스트 라벨 생성
+# label.pack()  # 화면에 배치
 
 # 새 창 정중앙에 오는 위치 계산해주는 함수
 def center_calc(window_width, window_height):
@@ -113,7 +113,7 @@ def help_information():
 
 # Help - Report Bugs... 실행
 def help_bug():
-    webbrowser.open("https://naver.com")  # 기본 웹 브라우저에서 URL 열기
+    webbrowser.open("https://github.com/saillor209/Upscaler/issues")  # 기본 웹 브라우저에서 URL 열기
 
 # Help 메뉴 생성
 help_menu = Menu(menu_bar, tearoff=0)

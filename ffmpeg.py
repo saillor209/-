@@ -28,9 +28,6 @@ def get_preferences():
         codec = f"h{codec}_nvenc"
     elif preferences.ffmpeg_calc_method == "qsv":
         codec = f"h{codec}_qsv"
-        
-    print("[Current Settings]")
-    print(f"   Input Path: {input}\n   Output Path: {output}\n   Calc: {calc}\n   Codec: {codec}")
 
     return input, output, calc, codec
 
