@@ -2,9 +2,7 @@
     "log_auto_scroll": true,
     "video_input_path": "./.Videos",
     "video_output_path": "./.Results",
-
     "ffmpeg_calc_method": "cpu",
     "ffmpeg_codec": "264",
-
     "realcugan_model": "model_pro"
 }

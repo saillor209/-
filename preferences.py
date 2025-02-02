@@ -1,7 +1,7 @@
 import json
 
 ## 프로그램 실행시 config.json을 저장함.
-def save_config(filename="config.json"):
+def save_config(filename="./configs/config.json"):
     data = {
         "log_auto_scroll": log_auto_scroll,
         "video_input_path": video_input_path,
