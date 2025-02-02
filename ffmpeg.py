@@ -37,7 +37,7 @@ def get_preferences():
 ### 비디오의 프레임 나누기 ###
 def split():
     # get_preferences
-    input_path, output_path, calc_method, _ = get_preferences()
+    input_path, _, calc_method, _ = get_preferences()
 
     # glob을 사용하여 다양한 확장자의 비디오 파일을 찾음
     video_files = glob.glob(os.path.join(input_path, '*.mp4')) + \
@@ -50,12 +50,12 @@ def split():
         # 비디오 파일 이름 받기
         video_name = os.path.basename(video)
     
-        # 출력 폴더 경로 지정 (output_path 안에 비디오 이름으로 폴더 생성)
-        output_folder = os.path.join("./.Temp", f"ffmpeg_split_{video_name}")
+        # 출력 폴더 경로 지정 (./.Temp 안에 비디오 이름으로 폴더 생성)
+        frame_out_path = os.path.join("./.Temp", f"ffmpeg_split_{video_name}")
     
         # 출력 폴더가 없으면 생성
-        if not os.path.exists(output_folder):
-            os.makedirs(output_folder)
+        if not os.path.exists(frame_out_path):
+            os.makedirs(frame_out_path)
 
 
         ## FPS값 추출 ##
@@ -86,7 +86,7 @@ def split():
             ffmpeg_path,
             "-i", video,  # 입력 비디오 파일
             "-vf", f"fps={fps}",  # Frames Per Second
-            os.path.join(output_folder, '%06d.jpg')  # 저장할 이미지 형식 (6자리 숫자 이미지 파일)
+            os.path.join(frame_out_path, '%06d.jpg')  # 저장할 이미지 형식 (6자리 숫자 이미지 파일)
             ]
         if calc_method != None:  # calc_method가 None이 아닐 때만 추가
             command_split.insert(1, "-hwaccel")
