@@ -166,10 +166,15 @@ help_menu.add_command(label="Information...", command=help_information)
 
     ### Debug 메뉴 ###
 
+def tet():
+    preferences.set_default()
+    print(preferences.video_input_path)
+    preferences.print_settings()
+
 # Debug 메뉴 생성
 debug_menu = Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="Debug", menu=debug_menu)
-debug_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)
+debug_menu.add_command(label="preferences.set_default", command=tet)
 debug_menu.add_separator()
 # ffmpeg.split 테스트!!!!!!!!!!!!!
 debug_menu.add_command(label="ffmpeg.split", command=ffmpeg.split)

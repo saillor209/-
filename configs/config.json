@@ -1,6 +1,6 @@
 {
     "log_auto_scroll": true,
-    "video_input_path": "C:/Users/User/Desktop",
+    "video_input_path": "./.Videos",
     "video_output_path": "./.Results",
     "ffmpeg_calc_method": "cpu",
     "ffmpeg_codec": "264",
