@@ -3,6 +3,7 @@
 *.html
 *.css
 *.png
+.ffmpegcodecs
 configs/
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,python
