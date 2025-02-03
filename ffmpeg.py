@@ -91,6 +91,6 @@ def split():
         
         # 로그
         print("Splitting the video based on the frame rate.")
-        print(f"[FFmpeg] {' '.join(command_find_fps)}")
+        print(f"[FFmpeg] {' '.join(command_split)}")
 
         subprocess.run(command_split)  # FFmpeg_split 명령어 실행

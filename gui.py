@@ -83,9 +83,11 @@ if __name__ == "__main__":
                 exist = True  # 비디오 파일이 있으면 True 반환
                 break
         if not exist: 
-            print_log("Video file not found in the input path.")
+            print_log("Video file not detected in the input path.")
             return 0
         else:
+            print_log("Video file detected in the input path.")
+            print_log("Splitting the video into frames.")
             ffmpeg.split()
 
     # Front Panel - Clear
