@@ -27,6 +27,8 @@ def set_preferences(preset = "default"):
         video_input_path = config["video_input_path"]
         video_output_path = config["video_output_path"]
         ffmpeg_calc_method = config["ffmpeg_calc_method"]
+        if ffmpeg_calc_method == "cpu": ffmpeg_hwaccel = False
+        else: ffmpeg_hwaccel = True
         ffmpeg_codec = config["ffmpeg_codec"]
         realcugan_model = config["realcugan_model"]
 

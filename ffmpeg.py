@@ -48,7 +48,7 @@ def split():
         video_name = os.path.basename(video)
     
         # 출력 폴더 경로 지정 (./.temp 안에 비디오 이름으로 폴더 생성)
-        frame_out_path = os.path.join("./.temp", f"ffmpeg_split_{video_name}")
+        frame_out_path = os.path.join("./.temp", f"{video_name}")
     
         # 출력 폴더가 없으면 생성
         if not os.path.exists(frame_out_path):
@@ -75,7 +75,7 @@ def split():
         # fps = math.ceil(numerator / denominator)  # 분자, 분모 나눈 후 소수점 올림 (math.ceil = 올림, math.floor = 내림)
         #   ㄴ 이거 굳이 정수로 안해도 프레임 잘 뽑아내던데 굳이 해야하나????
         fps = numerator / denominator
-        print(f"[FFmpeg] FPS of the video = {fps}")
+        print(f"[FFmpeg] FPS of the video is {fps}")
 
 
         ## 비디오의 프레임을 이미지 파일로 저장 ##
@@ -89,7 +89,8 @@ def split():
             command_split.insert(1, "-hwaccel")
             command_split.insert(2, calc_method)
         
-        # FFmpeg_split 명령어 실행
-        print("[FFmpeg] Splitting the video based on the frame rate.")
-        print("[FFmpeg]", " ".join(command_split))
-        subprocess.run(command_split)
+        # 로그
+        print("Splitting the video based on the frame rate.")
+        print(f"[FFmpeg] {' '.join(command_find_fps)}")
+
+        subprocess.run(command_split)  # FFmpeg_split 명령어 실행
